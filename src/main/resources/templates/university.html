@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Вся база данных</title>
+    <style>
+        table { border-collapse: collapse; width: 80%; margin-bottom: 30px; }
+        th, td { border: 1px solid black; padding: 5px; text-align: left; }
+        th { background-color: #ddd; }
+    </style>
+</head>
+<body>
+
+<h1>Студенты</h1>
+<p th:if="${#lists.isEmpty(students)}">Нет данных в базе!</p>
+<table th:if="${!#lists.isEmpty(students)}">
+    <tr>
+        <th>ID</th>
+        <th>ФИО</th>
+        <th>Группа</th>
+        <th>Дата рождения</th>
+    </tr>
+    <tr th:each="s : ${students}">
+        <td th:text="${s.id}"></td>
+        <td th:text="${s.name}"></td>
+        <td th:text="${s.groupName}"></td>
+        <td th:text="${s.birthDate}"></td>
+    </tr>
+</table>
+
+<h1>Курсы</h1>
+<p th:if="${#lists.isEmpty(courses)}">Нет курсов!</p>
+<table th:if="${!#lists.isEmpty(courses)}">
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Преподаватель</th>
+    </tr>
+    <tr th:each="c : ${courses}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.title}"></td>
+        <td th:text="${c.professor}"></td>
+    </tr>
+</table>
+
+<h1>Оценки студентов</h1>
+<div th:each="s : ${students}">
+    <h3 th:text="${s.name} + ' (' + ${s.groupName} + ')'"></h3>
+    <p th:if="${#lists.isEmpty(s.studentCourses)}">Нет оценок!</p>
+    <table th:if="${!#lists.isEmpty(s.studentCourses)}">
+        <tr>
+            <th>Курс</th>
+            <th>Преподаватель</th>
+            <th>Оценка</th>
+        </tr>
+        <tr th:each="sc : ${s.studentCourses}">
+            <td th:text="${sc.course.title}"></td>
+            <td th:text="${sc.course.professor}"></td>
+            <td th:text="${sc.mark}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

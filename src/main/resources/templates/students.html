@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Студенты</title>
+    <style>
+        table { border-collapse: collapse; width: 80%; margin-bottom: 30px; }
+        th, td { border: 1px solid black; padding: 5px; text-align: left; }
+        th { background-color: #ddd; }
+    </style>
+</head>
+<body>
+
+<h1>Студенты</h1>
+<p th:if="${#lists.isEmpty(students)}">Нет студентов!</p>
+
+<table th:if="${!#lists.isEmpty(students)}">
+    <tr>
+        <th>ID</th>
+        <th>ФИО</th>
+        <th>Группа</th>
+        <th>Дата рождения</th>
+        <th>Действия</th>
+    </tr>
+    <tr th:each="s : ${students}">
+        <td th:text="${s.id}"></td>
+        <td th:text="${s.name}"></td>
+        <td th:text="${s.groupName}"></td>
+        <td th:text="${s.birthDate}"></td>
+        <td>
+            <form th:action="@{/students/delete}" method="post">
+                <input type="hidden" name="id" th:value="${s.id}" />
+                <button type="submit">Удалить</button>
+            </form>
+        </td>
+    </tr>
+
+    <tr th:each="s : ${students}">
+        <td colspan="5">
+            <strong>Курсы студента: <span th:text="${s.name}"></span></strong>
+            <p th:if="${#lists.isEmpty(s.studentCourses)}">Нет курсов</p>
+            <ul th:if="${!#lists.isEmpty(s.studentCourses)}">
+                <li th:each="sc : ${s.studentCourses}">
+                    <span th:text="${sc.course.title} + ' (' + ${sc.course.professor} + ')'"></span>
+                    <form th:action="@{/students/removeCourse}" method="post" style="display:inline;">
+                        <input type="hidden" name="studentId" th:value="${s.id}" />
+                        <input type="hidden" name="courseId" th:value="${sc.course.id}" />
+                        <button type="submit">Удалить</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form th:action="@{/students/assignCourse}" method="post">
+                <input type="hidden" name="studentId" th:value="${s.id}" />
+                <select name="courseId">
+                    <option th:each="c : ${availableCoursesMap.get(s.id)}" th:value="${c.id}" th:text="${c.title} + ' (' + ${c.professor} + ')'"></option>
+                </select>
+                <button type="submit">Добавить курс</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<h2>Добавить нового студента</h2>
+<form th:action="@{/students/add}" method="post">
+    <label>ФИО: <input type="text" name="name" required /></label><br/>
+    <label>Группа: <input type="text" name="groupName" required /></label><br/>
+    <label>Дата рождения: <input type="date" name="birthDate" required /></label><br/>
+    <button type="submit">Добавить студента</button>
+</form>
+
+</body>
+</html>

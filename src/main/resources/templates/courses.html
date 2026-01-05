@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Курсы</title>
+    <style>
+        table { border-collapse: collapse; width: 80%; margin-bottom: 30px; }
+        th, td { border: 1px solid black; padding: 5px; text-align: left; }
+        th { background-color: #ddd; }
+    </style>
+</head>
+<body>
+
+<h2>Список курсов</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Преподаватель</th>
+        <th>Действия</th>
+    </tr>
+    <tr th:each="c : ${courses}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.title}"></td>
+        <td th:text="${c.professor}"></td>
+        <td>
+            <form th:action="@{/courses/delete}" method="post">
+                <input type="hidden" name="id" th:value="${c.id}" />
+                <button type="submit">Удалить</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<h2>Добавить новый курс</h2>
+<form th:action="@{/courses/add}" method="post">
+    <label>Название курса: <input type="text" name="title" required /></label><br/>
+    <label>Преподаватель: <input type="text" name="professor" required /></label><br/>
+    <button type="submit">Добавить</button>
+</form>
+
+</body>
+</html>
