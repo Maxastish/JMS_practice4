@@ -15,7 +15,7 @@ public class AuditLogListener {
         this.repository = repository;
     }
 
-    @JmsListener(destination = "auditQueue")
+    @JmsListener(destination = "auditTopic", containerFactory = "topicListenerFactory")
     public void receive(AuditMessage msg) {
 
         AuditLog log = new AuditLog();

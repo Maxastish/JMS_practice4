@@ -14,9 +14,9 @@ public class AuditNotificationListener {
         this.emailService = emailService;
     }
 
-    @JmsListener(destination = "auditQueue")
+    @JmsListener(destination = "auditTopic", containerFactory = "topicListenerFactory")
     public void notify(AuditMessage msg) {
-
+        
         if (!msg.getEntity().equals("Student")) return;
         if (!msg.getAction().equals("DELETE")) return;
 
